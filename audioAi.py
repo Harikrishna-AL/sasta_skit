@@ -62,5 +62,10 @@ if __name__ == "__main__":
     # print(audioAi("./audio.ogg"))
     # print(text_to_speech("Hello World"))
     # print(gpt_response("Imagine I am a customer and you are a call center employee. I am calling you because I have a problem with my internet connection. I am very angry because I have been waiting for 2 hours. I want to cancel my subscription. Respond to me."))
-    response = gpt_response("Hello. repond as a call center employee.")
+    scenario = "Imagine I am a customer and you are a call center employee from a company called Skit.AI. I am calling you because I have a problem with my internet connection. I am very angry because I have been waiting for 2 hours. I want to cancel my subscription. Respond to me accordingly now."
+    message = "Hello"
+    # query = "scenario: " + scenario + "\n\n" + "message: " + message
+    query = scenario + "\n\n" + message
+    response = gpt_response(query)
+    print(response)
     text_to_speech(response)
