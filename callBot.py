@@ -7,11 +7,44 @@ import imutils
 from audioAi import *
 import streamlit as st
 from audio_recorder_streamlit import audio_recorder
+import numpy as np
+import time
 
 
 def skit_GUI():
     st.title("Sasta Skit")
-    audio_bytes = audio_recorder()
+    _, col2, _ = st.columns(3)
+    with col2:
+        audio_bytes = audio_recorder(
+            text="",
+            recording_color="#e8b62c",
+            neutral_color="#6aa36f",
+            icon_name="microphone",
+            icon_size="4x",
+        )
+
+    # progress_bar = st.progress(0)
+    # status_text = st.empty()
+    # chart = st.line_chart(np.random.randn(10, 2))
+
+    # for i in range(100):
+    #     # Update progress bar.
+    #     progress_bar.progress(i + 1)
+
+    #     new_rows = np.random.randn(10, 2)
+
+    #     # Update status text.
+    #     status_text.text(
+    #         'The latest random number is: %s' % new_rows[-1, 1])
+
+    #     # Append data to the chart.
+    #     chart.add_rows(new_rows)
+
+    #     # Pretend we're doing some computation that takes time.
+    #     time.sleep(0.1)
+
+    # status_text.text('Done!')
+    # st.balloons()
     if audio_bytes:
         st.audio(audio_bytes, format="audio/wav")
 
