@@ -2,10 +2,33 @@ import whisper
 import openai
 from dotenv import load_dotenv
 import os
+from transformers import LlamaForCausalLM, LlamaTokenizer
+import torch
 
 load_dotenv()
 
 openai.api_key = os.getenv("OPEN_API_KEY")
+
+# tokenizer = LlamaTokenizer.from_pretrained('pyllama_data/')
+# model = LlamaForCausalLM.from_pretrained('pyllama_data/7B/')
+
+# pip install transformers accelerate bitsandbytes
+from transformers import AutoModel, AutoTokenizer
+
+# from transformers import LlamaForConditionalGeneration, LlamaTokenizer
+
+model_path = "pyllama_data/7B/ggml-model-q4_0.bin"
+
+# Load the LLMa model
+model = AutoModel.from_pretrained("pyllama_data/7B/ggml-model-q4_0.bin")
+tokenizer = AutoTokenizer.from_pretrained("pyllama_data/")
+
+# model_id = "bigscience/bloom-1b7"
+
+# tokenizer = AutoTokenizer.from_pretrained('pyllama_data/')
+# model = AutoModel.from_pretrained('pyllama_data/7B/ggml-model-q4_0.bin', device_map="auto")
+# model = torch.load('pyllama_data/7B/ggml-model-q4_0.bin', map_location=torch.device('cuda:0'))
+# print(model)
 
 
 def audioAi(file):
@@ -66,6 +89,6 @@ if __name__ == "__main__":
     message = "Hello"
     # query = "scenario: " + scenario + "\n\n" + "message: " + message
     query = scenario + "\n\n" + message
-    response = gpt_response(query)
-    print(response)
-    text_to_speech(response)
+    # response = gpt_response(query)
+    # print(response)
+    # text_to_speech(response)
