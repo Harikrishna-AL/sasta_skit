@@ -4,13 +4,17 @@ import pickle
 import struct
 import imutils
 import streamlit as st
+import os
 
 
 def client_GUI():
     # To read an play an audio file
-    audio_file = open("audio.wav", "rb")
-    audio_bytes = audio_file.read()
-    st.audio(audio_bytes, format="audio/wav")
+    if os.path.exists("audio.wav"):
+        audio_file = open("audio.wav", "rb")
+        audio_bytes = audio_file.read()
+        st.audio(audio_bytes, format="audio/wav")
+    else:
+        st.write("No audio file found")
 
 
 def connect_to_server():

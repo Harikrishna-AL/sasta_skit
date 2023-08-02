@@ -9,6 +9,9 @@ import streamlit as st
 from audio_recorder_streamlit import audio_recorder
 import numpy as np
 import time
+from bot_process import *
+import librosa
+import soundfile as sf
 
 
 def skit_GUI():
@@ -23,11 +26,20 @@ def skit_GUI():
             icon_size="4x",
         )
     if audio_bytes:
-        # play and also save the file locally
         st.audio(audio_bytes, format="audio/wav")
-        with open("audio.wav", "wb") as f:
+        with open("audio_data/audio.wav", "wb") as f:
             f.write(audio_bytes)
-            
+        audio_file_path = "audio_data/audio.wav"
+        new_sr = 16000
+        y, sr = librosa.load(audio_file_path, sr=new_sr)
+        resampled_file_path = "audio_data/audio.wav"
+        sf.write(resampled_file_path, y, new_sr)
+        text = audioAi(audio_file_path)
+        st.write(text)
+        response = get_response(text)
+        st.write(response)
+        text_to_speech(response)
+        st.audio("audio_data/output.mp3", format="audio/mp3")
 
 
 def connect_to_client():

@@ -2,8 +2,8 @@ import whisper
 import openai
 from dotenv import load_dotenv
 import os
-from transformers import LlamaForCausalLM, LlamaTokenizer
-import torch
+from transformers import WhisperProcessor, WhisperForConditionalGeneration
+from datasets import load_dataset
 
 load_dotenv()
 
@@ -11,9 +11,28 @@ load_dotenv()
 def audioAi(file):
     # model = whisper.load_model("base")
     # result = model.transcribe(file)
-    audio_file = open(file, "rb")
-    result = openai.Audio.transcribe("whisper-1", audio_file)
-    return result["text"]
+    # audio_file = open(file, "rb")
+    # result = openai.Audio.transcribe("whisper-1", audio_file)
+    # return result["text"]
+    processor = WhisperProcessor.from_pretrained("openai/whisper-tiny")
+    model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-tiny")
+    model.config.forced_decoder_ids = None
+
+    # load dummy dataset and read audio files
+    ds = load_dataset("audio_data", "clean", split="train")
+    sample = ds[0]["audio"]
+    input_features = processor(
+        sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt"
+    ).input_features
+
+    # generate token ids
+    predicted_ids = model.generate(input_features)
+    # decode token ids to text
+    transcription = processor.batch_decode(predicted_ids, skip_special_tokens=False)
+
+    transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
+    # print(transcription)
+    return transcription[0]
 
 
 def gpt_response(text):
@@ -52,20 +71,23 @@ def text_to_speech(text):
     }
 
     response = requests.post(url, json=data, headers=headers)
-    with open("output.mp3", "wb") as f:
+    with open("audio_data/output.mp3", "wb") as f:
         for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
             if chunk:
                 f.write(chunk)
 
 
-if __name__ == "__main__":
-    # print(audioAi("./audio.ogg"))
-    # print(text_to_speech("Hello World"))
-    # print(gpt_response("Imagine I am a customer and you are a call center employee. I am calling you because I have a problem with my internet connection. I am very angry because I have been waiting for 2 hours. I want to cancel my subscription. Respond to me."))
-    scenario = "Imagine I am a customer and you are a call center employee from a company called Skit.AI. I am calling you because I have a problem with my internet connection. I am very angry because I have been waiting for 2 hours. I want to cancel my subscription. Respond to me accordingly now."
-    message = "Hello"
-    # query = "scenario: " + scenario + "\n\n" + "message: " + message
-    query = scenario + "\n\n" + message
-    # response = gpt_response(query)
-    # print(response)
-    # text_to_speech(response)
+# if __name__ == "__main__":
+#     # print(audioAi("./audio.ogg"))
+#     # print(text_to_speech("Hello World"))
+#     # print(gpt_response("Imagine I am a customer and you are a call center employee. I am calling you because I have a problem with my internet connection. I am very angry because I have been waiting for 2 hours. I want to cancel my subscription. Respond to me."))
+#     scenario = "Imagine I am a customer and you are a call center employee from a company called Skit.AI. I am calling you because I have a problem with my internet connection. I am very angry because I have been waiting for 2 hours. I want to cancel my subscription. Respond to me accordingly now."
+#     message = "Hello"
+#     # query = "scenario: " + scenario + "\n\n" + "message: " + message
+#     query = scenario + "\n\n" + message
+#     # response = gpt_response(query)
+#     # print(response)
+#     # text_to_speech(response)
+
+
+# load model and processor
