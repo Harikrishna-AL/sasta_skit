@@ -1,7 +1,3 @@
-import socket
-import cv2
-import pickle
-import struct
 from audioAi import *
 import streamlit as st
 from audio_recorder_streamlit import audio_recorder
