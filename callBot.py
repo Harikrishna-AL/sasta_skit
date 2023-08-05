@@ -1,14 +1,10 @@
-# server
 import socket
 import cv2
 import pickle
 import struct
-import imutils
 from audioAi import *
 import streamlit as st
 from audio_recorder_streamlit import audio_recorder
-import numpy as np
-import time
 from bot_process import *
 import librosa
 import soundfile as sf
@@ -16,8 +12,13 @@ import soundfile as sf
 
 def skit_GUI():
     st.title("Sasta Skit")
-    _, col2, _ = st.columns(3)
-    with col2:
+    col1, _, col3 = st.columns(3)
+    with col3:
+        # Text field to put api key
+        api_key = st.text_input("Enter your API key")
+        if api_key:
+            os.environ["OPENAI_API_KEY"] = api_key
+    with col1:
         audio_bytes = audio_recorder(
             text="",
             recording_color="#e8b62c",
@@ -36,7 +37,7 @@ def skit_GUI():
         sf.write(resampled_file_path, y, new_sr)
         text = audioAi(audio_file_path)
         st.write(text)
-        response = get_response(text)
+        response = get_response_gpt(text)["content"]
         st.write(response)
         text_to_speech(response)
         st.audio("audio_data/output.mp3", format="audio/mp3")

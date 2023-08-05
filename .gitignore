@@ -3,3 +3,4 @@ env/
 audio.ogg
 .env
 pyllama_data/
+audio_data/
