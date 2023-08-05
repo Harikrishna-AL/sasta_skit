@@ -9,3 +9,19 @@ Different components of sasta skit:
   <li>Whisper AI to convert audio to text</li>
   <li>Elevenlabs API for text to speech</li>
 </ul>
+
+### How to run
+- To create your own virtual environment use the following commnad
+  ```
+  virtualenv env
+  ```
+- To instal all the python dependencies write the following command
+  ```
+  pip install -r skit-requirements.txt
+  ```
+- To run the project using streamlit.
+  ```
+  streamlit run callBot.py
+  ```
+### Usage
+  
