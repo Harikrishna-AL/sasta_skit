@@ -1,19 +1,33 @@
-from audioAi import *
+import os
+
 import streamlit as st
 from audio_recorder_streamlit import audio_recorder
-from bot_process import *
 import librosa
 import soundfile as sf
 
+from bot_process import get_response_gpt
+from audioAi import (
+    audioAi,
+    text_to_speech,
+)
+
 
 def skit_GUI():
+    """This function is used to create the GUI for sasta Skit
+
+    :params: None
+    :return: None
+    :raises: None
+    """
     st.title("Sasta Skit")
     col1, _, col3 = st.columns(3)
+
     with col3:
-        # Text field to put api key
         api_key = st.text_input("Enter your API key")
-        if api_key:
+        try:
             os.environ["OPENAI_API_KEY"] = api_key
+        except Exception as e:
+            st.error(e)
     with col1:
         audio_bytes = audio_recorder(
             text="",
@@ -22,21 +36,34 @@ def skit_GUI():
             icon_name="microphone",
             icon_size="4x",
         )
+
     if audio_bytes:
-        st.audio(audio_bytes, format="audio/wav")
-        with open("audio_data/audio.wav", "wb") as f:
-            f.write(audio_bytes)
-        audio_file_path = "audio_data/audio.wav"
-        new_sr = 16000
-        y, sr = librosa.load(audio_file_path, sr=new_sr)
-        resampled_file_path = "audio_data/audio.wav"
-        sf.write(resampled_file_path, y, new_sr)
-        text = audioAi(audio_file_path)
-        st.write(text)
-        response = get_response_gpt(text)["content"]
-        st.write(response)
-        text_to_speech(response)
-        st.audio("audio_data/output.mp3", format="audio/mp3")
+        try:
+            st.audio(audio_bytes, format="audio/wav")
+            with open("audio_data/audio.wav", "wb") as f:
+                f.write(audio_bytes)
+
+            audio_file_path = "audio_data/audio.wav"
+            new_sr = 16000
+            y, sr = librosa.load(audio_file_path, sr=new_sr)
+            resampled_file_path = "audio_data/audio.wav"
+            sf.write(resampled_file_path, y, new_sr)
+
+            text = audioAi(file=audio_file_path)
+            st.write(text)
+
+            response = get_response_gpt(input_prompt=text)["content"]
+            st.write(response)
+
+            text_to_speech(text=response)
+            st.audio(
+                "audio_data/output.mp3",
+                format="audio/mp3",
+            )
+        except Exception as e:
+            st.error(e)
+
+skit_GUI()
 
 
 def connect_to_client():
@@ -70,4 +97,3 @@ def connect_to_client():
                     client_socket.close()
 
 
-skit_GUI()
