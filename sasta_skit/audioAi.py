@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from datasets import load_dataset
 import requests
-import replicate
 
 load_dotenv()
 
@@ -95,3 +94,5 @@ def text_to_speech(text):
         for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
             if chunk:
                 f.write(chunk)
+
+# text_to_speech('Hello, my name is AI. I am here to help you.')

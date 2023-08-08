@@ -59,6 +59,15 @@ def get_response_gpt(input_prompt):
                 'content': input_prompt,
              },
         ],
+        stop=['\n', 'AI:', 'Customer:'],
+        max_tokens=50,
     )
 
     return completion.choices[0].message
+
+test = """Customer: Hello.
+AI: Hello. I am AI, talking to you on behalf of Skit.
+Customer: Ohh Okay, Why did you call?
+AI: 
+"""
+# print(get_response_gpt("test"))

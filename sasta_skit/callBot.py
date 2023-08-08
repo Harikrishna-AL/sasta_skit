@@ -5,8 +5,8 @@ from audio_recorder_streamlit import audio_recorder
 import librosa
 import soundfile as sf
 
-from bot_process import get_response_gpt
-from audioAi import (
+from sasta_skit.bot_process import get_response_gpt
+from sasta_skit.audioAi import (
     audioAi,
     text_to_speech,
 )
@@ -52,8 +52,17 @@ def skit_GUI():
             text = audioAi(file=audio_file_path)
             st.write(text)
 
+            # combine last line from output.txt and text and don't if it's empty
+            if os.path.exists("output.txt") and os.path.getsize("output.txt") > 0:
+                with open("output.txt", "r") as f:
+                    last_line = f.readlines()[-1]
+                if last_line:
+                    text = last_line + '\n' + text
+            
             response = get_response_gpt(input_prompt=text)["content"]
             st.write(response)
+            with open('output.txt', 'w') as f:
+                f.write(response)
 
             text_to_speech(text=response)
             st.audio(

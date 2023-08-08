@@ -4,3 +4,5 @@ audio.ogg
 .env
 pyllama_data/
 audio_data/
+build/
+sasta_skit.egg-info/
