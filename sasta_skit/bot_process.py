@@ -48,7 +48,7 @@ def get_response_gpt(input_prompt):
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
     completion = openai.ChatCompletion.create(
-        model = 'gpt-3.5-turbo',
+        model = 'gpt-3.5-turbo-0301',
         messages=[
             {
                 'role': 'system',
@@ -70,4 +70,4 @@ AI: Hello. I am AI, talking to you on behalf of Skit.
 Customer: Ohh Okay, Why did you call?
 AI: 
 """
-# print(get_response_gpt(test))
+print(get_response_gpt(test))

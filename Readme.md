@@ -36,7 +36,11 @@ Since this project was supposed to be more focused on AI rather than putting on 
 
   load_dotenv()
 
-  skit = skit_GUI("/home/harikrishna/Desktop/test/audio_data/audio.wav","./audio_data/output.mp3","./output.txt")
+  skit = skit_GUI(
+    "/home/harikrishna/Desktop/test/audio_data/audio.wav",
+    "./audio_data/output.mp3",
+    "./output.txt",
+    )
 
   ```
 - Now to run the project 
