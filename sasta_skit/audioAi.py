@@ -61,7 +61,7 @@ def gpt_response(text):
     return result
 
 
-def text_to_speech(text):
+def text_to_speech(text,output_file_path):
     """This function is used to generate speech from text using the
     Eleven Labs text to speech API
 
@@ -90,7 +90,7 @@ def text_to_speech(text):
         json=data,
         headers=headers,
         )
-    with open('audio_data/output.mp3', 'wb') as f:
+    with open(output_file_path, 'wb') as f:
         for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
             if chunk:
                 f.write(chunk)

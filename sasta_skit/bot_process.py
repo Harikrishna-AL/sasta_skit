@@ -5,7 +5,7 @@ import openai
 from dotenv import load_dotenv
 
 load_dotenv()
-input_file = open("prompts/chat-with-skit.txt", "r")
+# input_file = open("prompts/chat-with-skit.txt", "r")
 
 
 def get_response(input_prompt):
@@ -70,4 +70,4 @@ AI: Hello. I am AI, talking to you on behalf of Skit.
 Customer: Ohh Okay, Why did you call?
 AI: 
 """
-# print(get_response_gpt("test"))
+# print(get_response_gpt(test))

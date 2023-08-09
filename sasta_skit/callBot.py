@@ -12,14 +12,22 @@ from sasta_skit.audioAi import (
 )
 
 
-def skit_GUI():
+def skit_GUI(audio_file_path,output_file_path,output_text_file_path):
     """This function is used to create the GUI for sasta Skit
 
     :params: None
     :return: None
     :raises: None
     """
-    st.title("Sasta Skit")
+    col11, _, col13 = st.columns(3)
+    with col11:
+        st.title("Sasta Skit")
+    with col13:
+        # place a button that can reset the output.txt file
+        if st.button("Reset"):
+            with open(output_text_file_path, 'w') as f:
+                f.write("")
+
     col1, _, col3 = st.columns(3)
 
     with col3:
@@ -40,39 +48,37 @@ def skit_GUI():
     if audio_bytes:
         try:
             st.audio(audio_bytes, format="audio/wav")
-            with open("audio_data/audio.wav", "wb") as f:
+            with open(audio_file_path, "wb") as f:
                 f.write(audio_bytes)
 
-            audio_file_path = "audio_data/audio.wav"
             new_sr = 16000
             y, sr = librosa.load(audio_file_path, sr=new_sr)
-            resampled_file_path = "audio_data/audio.wav"
-            sf.write(resampled_file_path, y, new_sr)
+            sf.write(audio_file_path, y, new_sr)
 
             text = audioAi(file=audio_file_path)
             st.write(text)
 
-            # combine last line from output.txt and text and don't if it's empty
-            if os.path.exists("output.txt") and os.path.getsize("output.txt") > 0:
-                with open("output.txt", "r") as f:
+            # combine last line from a array named output and text and don't if it's empty
+            if os.path.exists(output_text_file_path) and os.path.getsize(output_text_file_path) > 0:
+                with open(output_text_file_path, "r") as f:
                     last_line = f.readlines()[-1]
                 if last_line:
                     text = last_line + '\n' + text
-            
-            response = get_response_gpt(input_prompt=text)["content"]
+            response = get_response_gpt(input_prompt=text)
+            response = response["content"]
             st.write(response)
-            with open('output.txt', 'w') as f:
+            with open(output_text_file_path, 'w') as f:
                 f.write(response)
 
-            text_to_speech(text=response)
+            text_to_speech(text=response,output_file_path=output_file_path)
             st.audio(
-                "audio_data/output.mp3",
+                output_file_path,
                 format="audio/mp3",
             )
         except Exception as e:
             st.error(e)
 
-skit_GUI()
+# skit_GUI()
 
 
 def connect_to_client():
