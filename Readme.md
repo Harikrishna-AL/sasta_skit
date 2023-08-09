@@ -17,16 +17,32 @@ Since this project was supposed to be more focused on AI rather than putting on 
 - Even then, I tried finding other language models from hugging face but unfortunately non of the small models could produce decent enough responses even with prompt engineering. With having no choice, I had to use the openAI chatGPT API to get the results.
 ### How to run
 - To create your own virtual environment use the following commnad
-  ```
+  ```shell
   virtualenv env
+  source env/bin/activate
   ```
-- To instal all the python dependencies write the following command
-  ```
-  pip install -r skit-requirements.txt
+- To instal all the python package write the following command
+  ```shell
+  pip install git+https://github.com/Harikrishna-AL/sasta_skit.git@master#egg=sasta_skit
   ```
 - To run the project using streamlit.
+  Create a python file and write the following code:
+  ```python
+  import os
+
+  import sasta_skit
+  from sasta_skit.callBot import skit_GUI
+  from dotenv import load_dotenv
+
+  load_dotenv()
+
+  skit = skit_GUI("/home/harikrishna/Desktop/test/audio_data/audio.wav","./audio_data/output.mp3","./output.txt")
+
   ```
-  streamlit run callBot.py
+- Now to run the project 
+
+  ```shell
+  streamlit run <name of the file>.py
   ```
 ### Usage
 
