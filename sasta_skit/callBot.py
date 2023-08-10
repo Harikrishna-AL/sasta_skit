@@ -10,9 +10,14 @@ from sasta_skit.audioAi import (
     audioAi,
     text_to_speech,
 )
+from sasta_skit.db import (
+    send_message,
+    get_message_history,
+    reset_database,
+)
 
 
-def skit_GUI(audio_file_path,output_file_path,output_text_file_path):
+def skit_GUI(audio_file_path, output_file_path, output_text_file_path):
     """This function is used to create the GUI for sasta Skit
 
     :params: None
@@ -25,7 +30,8 @@ def skit_GUI(audio_file_path,output_file_path,output_text_file_path):
     with col13:
         # place a button that can reset the output.txt file
         if st.button("Reset"):
-            with open(output_text_file_path, 'w') as f:
+            reset_database()
+            with open(output_text_file_path, "w") as f:
                 f.write("")
 
     col1, _, col3 = st.columns(3)
@@ -56,27 +62,33 @@ def skit_GUI(audio_file_path,output_file_path,output_text_file_path):
             sf.write(audio_file_path, y, new_sr)
 
             text = audioAi(file=audio_file_path)
+            send_message(user_id=0, message=text)
             st.write(text)
 
             # combine last line from a array named output and text and don't if it's empty
-            if os.path.exists(output_text_file_path) and os.path.getsize(output_text_file_path) > 0:
+            if (
+                os.path.exists(output_text_file_path)
+                and os.path.getsize(output_text_file_path) > 0
+            ):
                 with open(output_text_file_path, "r") as f:
                     last_line = f.readlines()[-1]
                 if last_line:
-                    text = last_line + '\n' + text
+                    text = last_line + "\n" + text
             response = get_response_gpt(input_prompt=text)
             response = response["content"]
+            send_message(user_id=1, message=response)
             st.write(response)
-            with open(output_text_file_path, 'w') as f:
+            with open(output_text_file_path, "w") as f:
                 f.write(response)
 
-            text_to_speech(text=response,output_file_path=output_file_path)
+            text_to_speech(text=response, output_file_path=output_file_path)
             st.audio(
                 output_file_path,
                 format="audio/mp3",
             )
         except Exception as e:
             st.error(e)
+
 
 # skit_GUI()
 
@@ -110,5 +122,3 @@ def connect_to_client():
                 key = cv2.waitKey(10)
                 if key == 13:
                     client_socket.close()
-
-

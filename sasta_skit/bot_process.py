@@ -9,26 +9,26 @@ load_dotenv()
 
 
 def get_response(input_prompt):
-    """This function is used to generate the response from the 
+    """This function is used to generate the response from the
     openAI chatGPT model API
-    
+
     :param input_prompt: The input prompt for the model
     :type input_prompt: str
     :return: str -- The generated response from the model
-    :raises: None    
+    :raises: None
     """
-    checkpoint = 'MBZUAI/LaMini-Neo-125M'
+    checkpoint = "MBZUAI/LaMini-Neo-125M"
     model = pipeline(
-        'text-generatin',
+        "text-generatin",
         model=checkpoint,
-        )
+    )
     generated_text = model(
         input_prompt,
         max_length=512,
         do_sample=True,
-        )[0][
-        'generated_text'
-    ]
+    )[
+        0
+    ]["generated_text"]
     return generated_text
 
 
@@ -48,22 +48,23 @@ def get_response_gpt(input_prompt):
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
     completion = openai.ChatCompletion.create(
-        model = 'gpt-3.5-turbo-0301',
+        model="gpt-3.5-turbo-0301",
         messages=[
             {
-                'role': 'system',
-                'content': system,
+                "role": "system",
+                "content": system,
             },
             {
-                'role': 'user',
-                'content': input_prompt,
-             },
+                "role": "user",
+                "content": input_prompt,
+            },
         ],
-        stop=['\n', 'AI:', 'Customer:'],
+        stop=["\n", "AI:", "Customer:"],
         max_tokens=50,
     )
 
     return completion.choices[0].message
+
 
 test = """Customer: Hello.
 AI: Hello. I am AI, talking to you on behalf of Skit.

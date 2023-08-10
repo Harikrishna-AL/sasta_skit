@@ -17,18 +17,18 @@ def audioAi(file):
     :return: str -- Transcription of the audio file
     :raises: None
     """
-    processor = WhisperProcessor.from_pretrained('openai/whisper-tiny')
-    model = WhisperForConditionalGeneration.from_pretrained('openai/whisper-tiny')
+    processor = WhisperProcessor.from_pretrained("openai/whisper-tiny")
+    model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-tiny")
     model.config.forced_decoder_ids = None
 
     ds = load_dataset(
-        'audio_data',
-        'clean',
+        "audio_data",
+        "clean",
         split="train",
-        )
-    sample = ds[0]['audio']
+    )
+    sample = ds[0]["audio"]
     input_features = processor(
-        sample['array'], sampling_rate=sample['sampling_rate'], return_tensors='pt'
+        sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt"
     ).input_features
 
     predicted_ids = model.generate(input_features)
@@ -47,10 +47,10 @@ def gpt_response(text):
     :raises: None
     """
     out = []
-    result = ''
+    result = ""
     output = replicate.run(
-        'replicate/gpt-j-6b:b3546aeec6c9891f0dd9929c2d3bedbf013c12e02e7dd0346af09c37e008c827',
-        input={'prompt': text},
+        "replicate/gpt-j-6b:b3546aeec6c9891f0dd9929c2d3bedbf013c12e02e7dd0346af09c37e008c827",
+        input={"prompt": text},
     )
 
     for item in output:
@@ -61,7 +61,7 @@ def gpt_response(text):
     return result
 
 
-def text_to_speech(text,output_file_path):
+def text_to_speech(text, output_file_path):
     """This function is used to generate speech from text using the
     Eleven Labs text to speech API
 
@@ -71,28 +71,29 @@ def text_to_speech(text,output_file_path):
     :raises: None
     """
     CHUNK_SIZE = 1024
-    url = 'https://api.elevenlabs.io/v1/text-to-speech/pNInz6obpgDQGcFmaJgB'
+    url = "https://api.elevenlabs.io/v1/text-to-speech/pNInz6obpgDQGcFmaJgB"
 
     headers = {
-        'Accept': 'audio/mpeg',
-        'Content-Type': 'application/json',
-        'xi-api-key': os.getenv('XI_API_KEY/'),
+        "Accept": "audio/mpeg",
+        "Content-Type": "application/json",
+        "xi-api-key": os.getenv("XI_API_KEY/"),
     }
 
     data = {
-        'text': text,
-        'model_id': 'eleven_monolingual_v1',
-        'voice_settings': {'stability': 0.5, 'similarity_boost': 0.5},
+        "text": text,
+        "model_id": "eleven_monolingual_v1",
+        "voice_settings": {"stability": 0.5, "similarity_boost": 0.5},
     }
 
     response = requests.post(
-        url, 
+        url,
         json=data,
         headers=headers,
-        )
-    with open(output_file_path, 'wb') as f:
+    )
+    with open(output_file_path, "wb") as f:
         for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
             if chunk:
                 f.write(chunk)
+
 
 # text_to_speech('Hello, my name is AI. I am here to help you.')
