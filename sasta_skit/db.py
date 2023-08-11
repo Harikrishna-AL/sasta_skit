@@ -1,5 +1,5 @@
 import redis
-
+import json
 redis_client = redis.Redis(host="localhost", port=6379, db=0)
 
 
@@ -39,27 +39,15 @@ def reset_database():
     print("Database reset successful.")
 
 
-# Example Usage
-# if __name__ == "__main__":
-#     user_id_1 = 1
-#     user_id_2 = 2
+def dump_data_to_json(data, file_path):
+    """Dump data to json.
 
-#     reset_database()
-
-#     # Sending messages
-#     send_message(user_id_1, "Hi, how are you?")
-#     send_message(user_id_2, "I'm good! How about you?")
-#     send_message(user_id_1, "I'm good too!")
-#     send_message(user_id_1, "What are you doing?")
-
-#     # Getting message history
-#     history_user_1 = get_message_history(user_id_1)
-#     history_user_2 = get_message_history(user_id_2)
-
-#     print("Message history for User 1:")
-#     for msg in history_user_1:
-#         print(msg.decode("utf-8"))
-
-#     print("Message history for User 2:")
-#     for msg in history_user_2:
-#         print(msg.decode("utf-8"))
+    :param data: The data to be dumped.
+    :type data: dict
+    :param file_path: The path to the file where the data is to be dumped.
+    :type file_path: str
+    :return: None
+    :raises: None
+    """
+    with open(file_path, "w") as f:
+        json.dump(data, f)

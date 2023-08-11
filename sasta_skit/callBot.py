@@ -14,10 +14,16 @@ from sasta_skit.db import (
     send_message,
     get_message_history,
     reset_database,
+    dump_data_to_json,
 )
 
 
-def skit_GUI(audio_file_path, output_file_path, output_text_file_path):
+def skit_GUI(
+        audio_file_path,
+        output_file_path,
+        output_text_file_path,
+        json_file_path,
+        ):
     """This function is used to create the GUI for sasta Skit
 
     :params: None
@@ -86,11 +92,17 @@ def skit_GUI(audio_file_path, output_file_path, output_text_file_path):
                 output_file_path,
                 format="audio/mp3",
             )
+            user_history = get_message_history(user_id=0)
+            skit_history = get_message_history(user_id=1)
+            db_data = {
+                "user_history": user_history,
+                "skit_history": skit_history,
+            }
+            dump_data_to_json(data = db_data,
+                              json_file_path = json_file_path,
+                              )
         except Exception as e:
             st.error(e)
-
-
-# skit_GUI()
 
 
 def connect_to_client():
