@@ -8,6 +8,7 @@ Different components of sasta skit:
   <li>A LLM (here I have used chatGPT API)</li>
   <li>Whisper AI to convert audio to text</li>
   <li>Elevenlabs API for text to speech</li>
+  <li>Integration with Redis DB to store chat history and dump the same into a json file</li>
 </ul>
 
 ### Blockers
@@ -40,6 +41,7 @@ Since this project was supposed to be more focused on AI rather than putting on 
     "/home/harikrishna/Desktop/test/audio_data/audio.wav",
     "./audio_data/output.mp3",
     "./output.txt",
+    "./dump.json",
     )
 
   ```
