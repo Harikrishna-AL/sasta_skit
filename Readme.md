@@ -1,6 +1,6 @@
 # Skit Lite (Voice AI powered by Generative AI)
 
-This project aims to autmate call centers using vouce AI. Here, I,ll be usig OpenAI whisper and GPT models to make this possible. Right now the client and server can communicate with each other using sockets.
+This project aims to automate call centers using voice AI. Here, I,ll be usig OpenAI whisper and GPT models to make this possible. Right now the client and server can communicate with each other using sockets.
 
 Different components of sasta skit:
 <ul>
