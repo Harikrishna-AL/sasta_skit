@@ -1,4 +1,4 @@
-# Skit Lite (Voice AI powered by Generative AI)
+# Sasta Observer (Voice AI powered by Generative AI)
 
 This project aims to automate call centers using voice AI. Here, I,ll be usig OpenAI whisper and GPT models to make this possible. Right now the client and server can communicate with each other using sockets.
 
